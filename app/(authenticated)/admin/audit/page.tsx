@@ -44,8 +44,6 @@ export default function AuditLogPage() {
     const [entityFilter, setEntityFilter] = useState('All');
     const [actionFilter, setActionFilter] = useState('All');
     const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
-    const supabase = createClient();
-
     useEffect(() => {
         fetchLogs();
     }, []);
@@ -53,6 +51,7 @@ export default function AuditLogPage() {
     const fetchLogs = async () => {
         setLoading(true);
         try {
+            const supabase = createClient();
             const { data, error } = await supabase
                 .from('audit_log')
                 .select('*')
