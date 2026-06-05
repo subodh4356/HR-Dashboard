@@ -5,10 +5,15 @@ import { cookies } from 'next/headers'
 // Standard client that respects user cookies and RLS policies
 export async function createClient() {
     const cookieStore = await cookies()
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    const isInvalidUrl = !url || url === 'undefined' || url === 'null' || url.trim() === '';
+    const isInvalidKey = !anonKey || anonKey === 'undefined' || anonKey === 'null' || anonKey.trim() === '';
 
     return createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        isInvalidUrl ? 'https://placeholder.supabase.co' : url,
+        isInvalidKey ? 'placeholder-key' : anonKey,
         {
             cookies: {
                 getAll() {
@@ -30,9 +35,15 @@ export async function createClient() {
 
 // Admin client that uses the service role key to bypass RLS policies
 export function createAdminClient() {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    const isInvalidUrl = !url || url === 'undefined' || url === 'null' || url.trim() === '';
+    const isInvalidKey = !serviceRoleKey || serviceRoleKey === 'undefined' || serviceRoleKey === 'null' || serviceRoleKey.trim() === '';
+
     return createSupabaseClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        isInvalidUrl ? 'https://placeholder.supabase.co' : url,
+        isInvalidKey ? 'placeholder-key' : serviceRoleKey,
         {
             auth: {
                 autoRefreshToken: false,
