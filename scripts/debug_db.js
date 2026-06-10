@@ -1,11 +1,19 @@
+const path = require('path');
+const dotenv = require('dotenv');
 const { createClient } = require('@supabase/supabase-js');
-// require('dotenv').config... not needed with node --env-file
 
+// Load environment variables from .env.local
+dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
-const supabase = createClient(
-    'https://sydtymhplkbbzsvygzri.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5ZHR5bWhwbGtiYnpzdnlnenJpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTU1NDc5MiwiZXhwIjoyMDgxMTMwNzkyfQ.O0Ouy43cu-5GgW12q4Y5a0O8EiXp7GeMoJeuIeijTSw'
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+    console.error("Error: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not defined in .env.local");
+    process.exit(1);
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function inspectAttendance() {
     const { data, error } = await supabase
@@ -18,7 +26,7 @@ async function inspectAttendance() {
     } else if (data && data.length > 0) {
         console.log("Attendance Columns:", Object.keys(data[0]));
     } else {
-        console.log("Attendance table empty. Trying to insert a dummy to check schema if possible? No, just logging.");
+        console.log("Attendance table empty.");
     }
 }
 
