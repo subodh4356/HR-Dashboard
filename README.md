@@ -1,4 +1,5 @@
 # 🚀 HR-Dashboard (Enterprise HRMS Portal)
+https://hr-dashboard-alpha-seven.vercel.app/login
 A high-fidelity, role-based Enterprise Human Resource Management System (HRMS) built with Next.js 16, Tailwind CSS v4, and Supabase.
 
 ## 📝 Description
